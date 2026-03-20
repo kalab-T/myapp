@@ -37,6 +37,8 @@ function formatTelegramMessage(body: TelegramRequestBody) {
 }
 
 export default defineEventHandler(async (event) => {
+  assertMethod(event, 'POST')
+
   const config = useRuntimeConfig(event)
   const body = await readBody<TelegramRequestBody>(event)
   const phoneNumber = body.phoneNumber?.trim()
